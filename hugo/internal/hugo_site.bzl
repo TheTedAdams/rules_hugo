@@ -121,7 +121,7 @@ def _hugo_site_impl(ctx):
     if ctx.attr.quiet:
         hugo_args.append("--quiet")
     if ctx.attr.verbose:
-        hugo_args.append("--verbose")
+        hugo_args.append("--logLevel info")
     if ctx.attr.base_url:
         hugo_args += ["--baseURL", ctx.attr.base_url]
     if ctx.attr.build_drafts:
@@ -244,8 +244,8 @@ def _hugo_serve_impl(ctx):
 
     if ctx.attr.quiet:
         hugo_args.append("--quiet")
-    if ctx.attr.quiet:
-        hugo_args.append("--verbose")
+    if ctx.attr.verbose:
+        hugo_args.append("--logLevel info")
     if ctx.attr.disable_fast_render:
         hugo_args.append("--disableFastRender")
 
