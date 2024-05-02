@@ -14,9 +14,9 @@ def _hugo_repository_impl(repository_ctx):
 
     os_name = repository_ctx.os.name.lower()
     if os_name.startswith("mac os"):
-        os_arch = "macOS-64bit"
+        os_arch = "darwin-universal"
     elif os_name.find("windows") != -1:
-        os_arch = "Windows-64bit"
+        os_arch = "windows-amd64"
     else:
         os_arch = "Linux-64bit"
     
@@ -37,7 +37,7 @@ hugo_repository = repository_rule(
     _hugo_repository_impl,
     attrs = {
         "version": attr.string(
-            default = "0.55.5",
+            default = "0.125.4",
             doc = "The hugo version to use",
         ),
         "sha256": attr.string(
