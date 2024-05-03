@@ -10,25 +10,28 @@ def _hugo_repository_impl(repository_ctx):
     if repository_ctx.attr.extended:
         hugo = "hugo_extended"
 
-    os_arch = repository_ctx.attr.os_arch
+    arch_extension = "linux-amd64.tar.gz"
 
     os_name = repository_ctx.os.name.lower()
     if os_name.startswith("mac os"):
-        os_arch = "darwin-universal"
+        arch_extension  = "darwin-universal.tar.gz"
     elif os_name.find("windows") != -1:
-        os_arch = "windows-amd64"
-    else:
-        os_arch = "Linux-64bit"
-    
-    url = "https://github.com/gohugoio/hugo/releases/download/v{version}/{hugo}_{version}_{os_arch}.tar.gz".format(
+        arch_extension = "windows-amd64.zip"
+
+    file_name = "{hugo}_{version}_{arch_extension}".format(
         hugo = hugo,
-        os_arch = os_arch,
         version = repository_ctx.attr.version,
+        arch_extension = arch_extension,
+    )
+    
+    url = "https://github.com/gohugoio/hugo/releases/download/v{version}/{file_name}".format(
+        version = repository_ctx.attr.version,
+        file_name = file_name,
     )
 
     repository_ctx.download_and_extract(
         url = url,
-        sha256 = repository_ctx.attr.sha256,
+        sha256 = repository_ctx.attr.sha_dict.get(file_name),
     )
 
     repository_ctx.file("BUILD.bazel", HUGO_BUILD_FILE)
@@ -40,14 +43,13 @@ hugo_repository = repository_rule(
             default = "0.125.4",
             doc = "The hugo version to use",
         ),
-        "sha256": attr.string(
-            doc = "The sha256 value for the binary",
-        ),
-        "os_arch": attr.string(
-            doc = "The os arch value. If empty, autodetect it",
-        ),
         "extended": attr.bool(
             doc = "Use extended hugo version",
+        ),
+        "sha_dict": attr.string_dict(
+          doc = "A dictionary where the key is a release file name and the value is that file's sha256 value.",
+          mandatory = True,
+          allow_empty = False,
         ),
     },
 )

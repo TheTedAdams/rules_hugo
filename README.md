@@ -2,7 +2,6 @@
 
 [![Build Status](https://api.cirrus-ci.com/github/stackb/rules_hugo.svg)](https://cirrus-ci.com/github/stackb/rules_hugo)
 
-
 <table><tr>
 <td><img src="https://raw.githubusercontent.com/bazelbuild/bazel-blog/master/images/bazel-icon.svg" height="120"/></td>
 <td><img src="https://raw.githubusercontent.com/gohugoio/hugoDocs/master/static/img/hugo-logo.png" height="120"/></td>
@@ -15,16 +14,16 @@
 
 ## Repository Rules
 
-|               Name   |  Description |
-| -------------------: | :----------- |
-| [hugo_repository](#hugo_repository) | Load hugo dependency for this repo. |
-| [github_hugo_theme](#github_hugo_theme) | Load a hugo theme from github. |
+|                                    Name | Description                         |
+| --------------------------------------: | :---------------------------------- |
+|     [hugo_repository](#hugo_repository) | Load hugo dependency for this repo. |
+| [github_hugo_theme](#github_hugo_theme) | Load a hugo theme from github.      |
 
 ## Build Rules
 
-|               Name   |  Description |
-| -------------------: | :----------- |
-| [hugo_site](#hugo_site) | Declare a hugo site. |
+|                      Name | Description           |
+| ------------------------: | :-------------------- |
+|   [hugo_site](#hugo_site) | Declare a hugo site.  |
 | [hugo_theme](#hugo_theme) | Declare a hugo theme. |
 
 ## Usage
@@ -48,9 +47,19 @@ load("@build_stack_rules_hugo//hugo:rules.bzl", "hugo_repository", "github_hugo_
 #
 # Load hugo binary itself
 #
+# For whatever version you are loading, you must supply sha_dict sourced from the checksums.txt of the release.
 # Optionally, load a specific version of Hugo, with the 'version' argument
 hugo_repository(
     name = "hugo",
+    version = "0.125.4",
+    sha_dict = {
+      "hugo_0.125.4_darwin-universal.tar.gz": "faa85ddc69bdfbcd41ce1f369a2ecba5caf261ad0dafa76ee3016e1a05960fab",
+      "hugo_0.125.4_linux-amd64.tar.gz": "00dc0674e458560dc7ee3310d1d4adb509208be867d9498d0055fd29e406e251",
+      "hugo_0.125.4_windows-amd64.zip": "39196bf2a5afa94078e197a6d97b0a2bc6b76d2ca71838090beb6f2045f17c28",
+      "hugo_extended_0.125.4_darwin-universal.tar.gz": "677279b5dd9f8aaf6d010f93895ba5e1180225d9b591172548d5e8dd8c2f1c78",
+      "hugo_extended_0.125.4_linux-amd64.tar.gz": "a416f563c6c9cd773dae1a8a7c70596ef4afd45e36436e9c6b7822df56dc4b65",
+      "hugo_extended_0.125.4_windows-amd64.zip": "d1f6f3b6ef38bc347d4206f017cc5c7a0a268ffd4c88f57d09376eb32146378c",
+    }
 )
 
 #
@@ -126,6 +135,7 @@ pkg_tar(
 ```
 
 ### Declare a hugo_site with a GitHub released archive theme in your BUILD file
+
 ```python
 load("@build_stack_rules_hugo//hugo:rules.bzl", "hugo_site", "hugo_theme", "hugo_serve")
 
@@ -164,7 +174,6 @@ bazel run //site_complex:serve
 
 Then open your browser: [here](http://localhost:1313)
 
-
 ### Build the site
 
 The `hugo_site` target emits the output in the `bazel-bin` directory.
@@ -176,6 +185,7 @@ Target //:basic up-to-date:
   bazel-bin/basic
 [...]
 ```
+
 ```sh
 $ tree bazel-bin/basic
 bazel-bin/basic
